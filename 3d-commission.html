@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- GLightbox：圖片圖庫 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+  <title>五D卡好工作室 | 3D 委託作品</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans HK', sans-serif;
+      font-weight: 700;
+    }
+
+    body {
+      background: #fff;
+      color: #111;
+    }
+
+    /* ================== 共用導覽列 ================== */
+    header {
+      border-bottom: 3px solid #000;
+      padding: 16px 60px 0;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      height: 70px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 45px;
+      font-size: 16px;
+      position: relative;
+    }
+
+    .nav-item {
+      position: relative;
+      padding-bottom: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .nav-main-link {
+      text-decoration: none;
+      color: #000;
+    }
+
+    .nav-main-link:hover {
+      text-decoration: underline;
+    }
+
+    .active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: black;
+    }
+
+    /* 下拉 */
+    .dropdown {
+      position: absolute;
+      top: 80%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      gap: 30px;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.2s ease;
+      z-index: 999;
+    }
+
+    .nav-item:hover .dropdown,
+    .nav-item .dropdown:hover {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(6px);
+    }
+
+    .dropdown-column {
+      min-width: 140px;
+    }
+
+    .dropdown-title {
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .dropdown-bigtitle {
+      font-size: 15px;
+      font-weight: 900;
+      margin: 12px 0 6px;
+    }
+
+    .dropdown-list a {
+      display: block;
+      font-size: 13px;
+      color: #000;
+      text-decoration: none;
+      margin: 2px 0;
+    }
+
+    .dropdown-list a:hover {
+      text-decoration: underline;
+    }
+
+    .dropdown-link {
+      display: block;
+      margin-top: 6px;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .dropdown-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ================== 主版面 ================== */
+
+    main {
+      padding: 60px 40px;
+    }
+
+    .main-layout {
+      max-width: 1200px;
+      margin: 0 auto 80px;
+      /* 只保留單欄作品展示，不再分左右 */
+    }
+
+    .page-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    /* ===== 區塊標題 / 區塊排版（跟 2D 類似） ===== */
+    .group-section {
+      margin-bottom: 60px;
+    }
+
+    .group-title {
+      font-size: 28px;
+      font-weight: 900;
+      margin: 10px 0 25px;
+    }
+
+    .category-block {
+      margin-bottom: 32px;
+    }
+
+    .category-title {
+      font-size: 22px;
+      font-weight: 900;
+      margin: 0 0 12px;
+    }
+
+    .works-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .works-row .work-item {
+      flex: 1 1 280px;   /* 每行最多排 3 張左右，會自動換行 */
+      max-width: 32%;
+      min-width: 220px;
+    }
+
+    .work-thumb {
+      background: #ffffff;
+      overflow: hidden;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .work-thumb img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    /* ★ 建築建模區：固定縮圖高度，三張統一大小 */
+    #house-exterior .work-thumb {
+      width: 100%;
+      height: 220px;      /* 想更高或更矮可改這裡 */
+      overflow: hidden;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #house-exterior .work-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* 自動裁切，保持一致尺寸 */
+    }
+
+    /* 懸浮放大效果（跟 2D 類似） */
+    .glightbox:hover .work-thumb img {
+      transform: scale(1.05);
+      filter: brightness(1.05);
+    }
+
+    /* 區塊分隔線 */
+    .section-divider {
+      border: none;
+      border-top: 3px solid #000;
+      margin: 40px 0;
+    }
+
+    /* ================== 手機 RWD ================== */
+    @media (max-width: 768px) {
+      header {
+        padding: 12px 20px;
+      }
+
+      .navbar {
+        flex-wrap: wrap;
+      }
+
+      .nav-menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: #fff;
+        border-top: 2px solid #000;
+        margin-top: 10px;
+        padding: 20px 0;
+      }
+
+      .nav-menu.show {
+        display: flex;
+      }
+
+      .nav-item {
+        padding: 16px 20px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .dropdown {
+        position: static;
+        transform: none;
+        opacity: 1;
+        pointer-events: auto;
+        border: none;
+        border-radius: 0;
+        padding: 10px 20px;
+        flex-direction: column;
+        display: none;
+      }
+
+      .nav-item.open .dropdown {
+        display: block;
+      }
+
+      .hamburger {
+        width: 30px;
+        height: 24px;
+        flex-direction: column;
+        justify-content: space-between;
+        display: flex;
+        cursor: pointer;
+      }
+
+      .hamburger span {
+        width: 100%;
+        height: 4px;
+        background: #000;
+      }
+
+      main {
+        padding: 20px;
+      }
+
+      .main-layout {
+        margin-bottom: 40px;
+      }
+
+      .page-container {
+        max-width: 100%;
+      }
+
+      .works-row {
+        flex-direction: column;
+      }
+
+      .works-row .work-item {
+        max-width: 100%;
+      }
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const hamburger = document.querySelector(".hamburger");
+      const navMenu = document.querySelector(".nav-menu");
+      const navItems = document.querySelectorAll(".nav-item");
+
+      hamburger.addEventListener("click", () => {
+        navMenu.classList.toggle("show");
+      });
+
+      navItems.forEach(item => {
+        item.addEventListener("click", () => {
+          item.classList.toggle("open");
+        });
+      });
+    });
+  </script>
+</head>
+
+<body>
+<header>
+  <div class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <img src="image/logo.png" alt="五D卡好工作室 Logo">
+      </a>
+    </div>
+
+    <div class="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+
+    <div class="nav-menu">
+
+      <!-- 1. 委託列表 -->
+      <div class="nav-item">
+        委託列表
+        <div class="dropdown">
+          <!-- 2D -->
+          <div class="dropdown-column">
+            <div class="dropdown-title">2D</div>
+
+            <a href="2d-commission.html" class="dropdown-title dropdown-link">繪圖委託</a>
+            <div class="dropdown-list">
+             <a href="2d-commission.html#fullbody-ohuman">立繪</a>
+              <a href="2d-commission.html#cloth">服設</a>
+              <a href="2d-commission.html#surprise">驚喜包</a>
+              <a href="2d-commission.html#halfbody">半身</a>
+              <a href="2d-commission.html#chibi">Q版</a>
+              <a href="2d-commission.html#poster">海報</a>
+              <a href="2d-commission.html#bg">大型場景插圖</a>
+            </div>
+
+            <a href="2d-commission.html#animation-group" class="dropdown-title dropdown-link">動畫委託</a>
+            <div class="dropdown-list">
+              <a href="2d-commission.html#spine">Spine</a>
+              <a href="2d-commission.html#pixel">像素</a>
+            </div>
+          </div>
+
+          <!-- 3D -->
+          <div class="dropdown-column">
+            <div class="dropdown-title">3D</div>
+            <a href="3d-commission.html" class="dropdown-title dropdown-link">3D建模</a>
+            <div class="dropdown-list">
+              <a href="3d-commission.html#model-group">3D作品區</a>
+              <a href="3d-commission.html#anim3d-group">3D動畫區</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 創作者列表 -->
+      <div class="nav-item">
+        創作者列表
+        <div class="dropdown">
+          <div class="dropdown-column">
+            <div class="dropdown-title">2D</div>
+            <div class="dropdown-list">
+              <a href="2d-commission YATING.html">飛天蘋果派</a>
+            </div>
+          </div>
+
+          <div class="dropdown-column">
+            <div class="dropdown-title">3D</div>
+            <div class="dropdown-list">
+              <a href="3d-commission Sprite.html">雪碧</a>
+              <a href="3d-commissioneko.html">Evrox KO</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 關於工作室 -->
+      <div class="nav-item">
+        <a href="index.html" class="nav-main-link">關於工作室</a>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="main-layout">
+    <div class="page-container">
+      <h1 class="page-title">3D 委託作品</h1>
+      <p class="page-subtitle">
+        以下為 3D 場景與物件、動畫作品展示，點擊圖片可放大並於圖庫中切換。
+      </p>
+
+      <!-- ================== 3D 作品區 ================== -->
+      <section class="group-section" id="model-group">
+        <h2 class="group-title">3D 作品區</h2>
+
+        <!-- 1. 房屋外觀建模區 -->
+        <section class="category-block" id="house-exterior">
+          <h3 class="category-title">建築建模區</h3>
+          <div class="works-row">
+            <a href="image/雪碧/外觀01.png" class="work-item glightbox" data-gallery="exterior-gallery">
+              <div class="work-thumb">
+                <img src="image/雪碧/外觀01.png" alt="房屋外觀 1">
+              </div>
+            </a>
+            <a href="image/雪碧/外觀02.png" class="glightbox" data-gallery="exterior-gallery" style="display:none;"></a>
+            <a href="image/雪碧/外觀03.png" class="glightbox" data-gallery="exterior-gallery" style="display:none;"></a>
+           
+            <a href="image/雪碧/room-01.png" class="work-item glightbox" data-gallery="interior-gallery">
+              <div class="work-thumb">
+                <img src="image/雪碧/room-01.png" alt="房間 1">
+              </div>
+            </a>
+            <a href="image/雪碧/room-02.png" class="glightbox" data-gallery="interior-gallery" style="display:none;"></a>
+            <a href="image/雪碧/room-03.png" class="glightbox" data-gallery="interior-gallery" style="display:none;"></a>
+          
+            <a href="image/Evrox KO/room 1.jpg" class="work-item glightbox" data-gallery="EKO-gallery">
+              <div class="work-thumb">
+                <img src="image/Evrox KO/room 1.jpg" alt="房間 1">
+              </div>
+            </a>
+            <a href="image/Evrox KO/room 2.jpg" class="glightbox" data-gallery="EKO-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/room 3.jpg" class="glightbox" data-gallery="EKO-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/room 4.jpg" class="glightbox" data-gallery="EKO-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/room 5.jpg" class="glightbox" data-gallery="EKO-gallery" style="display:none;"></a>
+          
+          </div>
+        </section>
+
+        <!-- 3. 物件建模區 -->
+        <section class="category-block" id="object-model">
+          <h3 class="category-title">物件建模區</h3>
+          <div class="works-row">
+            <a href="image/Evrox KO/gun 1.jpg" class="work-item glightbox" data-gallery="object-gallery">
+              <div class="work-thumb">
+                <img src="image/Evrox KO/gun 1.jpg" alt="GUN">
+              </div>
+            </a>
+            <a href="image/Evrox KO/gun 2.jpg" class="glightbox" data-gallery="object-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/gun 3.jpg" class="glightbox" data-gallery="object-gallery" style="display:none;"></a>
+
+            <!-- 海報相關作品 -->
+            <a href="image/Evrox KO/evrox-dvd1.jpg" class="work-item glightbox" data-gallery="object1-gallery">
+              <div class="work-thumb">
+                <img src="image/Evrox KO/evrox-dvd1.jpg" alt="海報 4">
+              </div>
+            </a>
+            <a href="image/Evrox KO/evrox-dvd2.jpg" class="glightbox" data-gallery="object1-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/evrox-dvd3.jpg" class="glightbox" data-gallery="object1-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/evrox-dvd4.jpg" class="glightbox" data-gallery="object1-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/evrox-dvd5.jpg" class="glightbox" data-gallery="object1-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/evrox-dvd6.jpg" class="glightbox" data-gallery="object1-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/evrox-dvd7.jpg" class="glightbox" data-gallery="object1-gallery" style="display:none;"></a>
+
+            <a href="image/Evrox KO/device-1.jpg" class="work-item glightbox" data-gallery="object2-gallery">
+              <div class="work-thumb">
+                <img src="image/Evrox KO/device-1.jpg" alt="裝置 1">
+              </div>
+            </a>
+            <a href="image/Evrox KO/device-2.jpg" class="glightbox" data-gallery="object2-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/device-3.jpg" class="glightbox" data-gallery="object2-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/device-4.jpg" class="glightbox" data-gallery="object2-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/device-5.jpg" class="glightbox" data-gallery="object2-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/device-6.jpg" class="glightbox" data-gallery="object2-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/device-7.jpg" class="glightbox" data-gallery="object2-gallery" style="display:none;"></a>
+            <a href="image/Evrox KO/device-design.jpg" class="glightbox" data-gallery="object2-gallery" style="display:none;"></a>
+          </div>
+        </section>
+        <section class="category-block" id="GAMEobject-model">
+          <h3 class="category-title">角色建模區</h3>
+          <div class="works-row">
+            <a href="image/Evrox KO/evrox-image.jpg" class="work-item glightbox" data-gallery="object3-gallery">
+              <div class="work-thumb">
+                <img src="image/Evrox KO/evrox-image.jpg" alt="GUN">
+              </div>
+            </a>
+            </section>
+      </section>
+
+      <!-- 分隔線 -->
+      <hr class="section-divider">
+
+      <!-- ================== 3D 動畫區 ================== -->
+      <section class="group-section" id="anim3d-group">
+        <h2 class="group-title">3D 動畫區</h2>
+
+        <section class="category-block" id="anim3d">
+          <h3 class="category-title">告別日光</h3>
+          <div class="works-row">
+            <!-- 以告別日光圖當縮圖，點擊播放 mp4 -->
+            <a href="image/雪碧/告別日光 1.mp4"
+               class="work-item glightbox"
+               data-gallery="anim3d-gallery"
+               data-type="video">
+              <div class="work-thumb">
+                <img src="image/雪碧/告別日光.webp" alt="動畫 1">
+              </div>
+            </a>
+
+            <a href="image/雪碧/告別日光 2.mp4"
+               class="glightbox"
+               data-gallery="anim3d-gallery"
+               data-type="video"
+               style="display:none;"></a>
+          </div>
+        </section>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<!-- GLightbox 啟動 -->
+<script>
+  const lightbox = GLightbox({
+    selector: '.glightbox',
+    touchNavigation: true,
+    loop: true,
+    thumbnails: true,
+    zoomable: true,
+    draggable: true
+  });
+</script>
+
+</body>
+</html>
